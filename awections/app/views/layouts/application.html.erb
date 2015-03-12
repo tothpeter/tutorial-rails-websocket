@@ -3,12 +3,14 @@
 <head>
   <title>Awections</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+  <%= render "nav" %>
+  <div class="container">
+    <%= content_tag :div, alert, class: "flash bg-danger" if alert %>
+    <div class="flash bg-success"><%= notice %></div>
+    <%= yield %>
+  </div>
 </body>
 </html>
