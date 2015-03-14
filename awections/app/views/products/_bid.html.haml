@@ -5,13 +5,30 @@
     = form_for [ @product, @product.auction, Bid.new ] do |f|
       %p
         %strong
-          - if @product.auction.top_bid.user_id == current_user.id
-            Current bid:
+          - if @product.auction.top_bid.present?
+            - if @product.auction.top_bid.user_id == current_user.id
+              Current bid:
+            - else
+              You were outbid:
           - else
-            You were outbid:
+            Current bid:
+
         = @product.auction.current_bid
       %p
         Ends at #{l(@product.auction.ends_at, format: :short)}
       %p
         = f.text_field :value
         = f.button
+
+  :javascript
+    $(function(){
+        var user_id = "#{current_user.id}",
+            auction_id = "#{@product.auction.id}",
+            form = $('#new_bid');
+
+        var auctionSocket = new AuctionSocket(
+          user_id,
+          auction_id,
+          form
+        );
+      });
