@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   root 'products#index'
 
   resources :products do
-    resources :auctions, only: [ :create ]
+    resources :auctions, only: [ :create ] do
+      resources :bids, only: [ :create ]
+    end
   end
 end
