@@ -61,6 +61,16 @@ class ProductsController < ApplicationController
     end
   end
 
+  def transfer
+    product = Product.find params[:id]
+    if product.auction.ended?
+      product.update_attribute :user_id, product.auction.top_bid.user_id
+      return redirect_to product, notice: "Successfully transfered the product."
+    end
+
+    redirect_to product, alert: "The auction hasn't ended yet."
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
