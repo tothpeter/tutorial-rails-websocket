@@ -3,7 +3,7 @@
     = render "auctions/status"
   - else
     = form_for [ @product, @product.auction, Bid.new ] do |f|
-      %p
+      %p.message
         %strong
           - if @product.auction.top_bid.present?
             - if @product.auction.top_bid.user_id == current_user.id
@@ -13,7 +13,7 @@
           - else
             Current bid:
 
-        = @product.auction.current_bid
+          = @product.auction.current_bid
       %p
         Ends at #{l(@product.auction.ends_at, format: :short)}
       %p

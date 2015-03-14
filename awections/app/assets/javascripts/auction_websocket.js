@@ -27,19 +27,19 @@ AuctionSocket.prototype.initBinds = function() {
     switch(tokens[0]) {
       case "bidok":
         _this.bid(tokens[1]);
-        brake;
+        break;
       case "underbid":
         _this.underbid(tokens[1]);
-        brake;
+        break;
       case "outbid":
         _this.outbid(tokens[1]);
-        brake;
+        break;
       case "won":
         _this.won();
-        brake;
+        break;
       case "lost":
         _this.lost();
-        brake;
+        break;
     }
     console.log(e);
   }
