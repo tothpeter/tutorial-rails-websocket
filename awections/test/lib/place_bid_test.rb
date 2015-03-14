@@ -2,16 +2,36 @@ require 'test_helper'
 require 'place_bid'
 
 class PlaceBidTest < Minitest::Test
-  def test_it_places_a_bid
-    user = User.create! email: "email@email.com", password: "12345678"
-    another_user = User.create! email: "email2@email.com", password: "12345678"
-    product = Product.create! name: "name"
-    auction = Auction.create! value: 10, product_id: product.id
+  def setup
+    @user = User.create! email: "email@email.com", password: "12345678"
+    @another_user = User.create! email: "email2@email.com", password: "12345678"
+    @product = Product.create! name: "name"
+    @auction = Auction.create! value: 10, product_id: @product.id
+  end
 
-    service = PlaceBid.new value: 11, user_id: another_user.id, auction_id: auction.id
+  def test_it_places_a_bid
+    service = PlaceBid.new(
+      value: 11,
+      user_id: @another_user.id,
+      auction_id: @auction.id
+    )
 
     service.execute
 
-    assert_equal 11, auction.current_bid 
+    assert_equal 11, @auction.current_bid 
   end
+
+  def test_fails_to_place_bid_under_current_value
+    service = PlaceBid.new(
+      value: 9,
+      user_id: @another_user.id,
+      auction_id: @auction.id
+    )
+
+    refute service.execute, "Bid should not ne placet"
+  end
+
+  private 
+  
+  attr_reader :user, :another_user, :product, :auction
 end
