@@ -3,5 +3,8 @@
   %h2 Put this product to auction
 
   = form_for [ @product, Auction.new ] do |f|
-    = f.text_field :value
+    %p
+      = f.text_field :value
+    %p
+      = f.datetime_select :ends_at
     = f.button
