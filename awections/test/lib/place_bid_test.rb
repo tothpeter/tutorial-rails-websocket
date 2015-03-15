@@ -6,7 +6,7 @@ class PlaceBidTest < Minitest::Test
     @user = User.create! email: "email@email.com", password: "12345678"
     @another_user = User.create! email: "email2@email.com", password: "12345678"
     @product = Product.create! name: "name"
-    @auction = Auction.create! value: 10, product_id: @product.id
+    @auction = Auction.create! value: 10, product_id: @product.id, ends_at: Time.now + 24.hours
   end
 
   def test_it_places_a_bid
@@ -29,6 +29,27 @@ class PlaceBidTest < Minitest::Test
     )
 
     refute service.execute, "Bid should not ne placet"
+  end
+
+  def test_notifies_if_auction_has_won
+    service = PlaceBid.new(
+      value: 11,
+      user_id: user.id,
+      auction_id: auction.id
+    )
+
+    service.execute
+
+    another_service = PlaceBid.new(
+      value: 9001,
+      user_id: user.id,
+      auction_id: auction.id
+    )
+
+    Timecop.travel Time.now + 25.hours
+    another_service.execute
+
+    assert_equal :won, another_service.status
   end
 
   private 
